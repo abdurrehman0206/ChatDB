@@ -240,6 +240,12 @@ button {
   button:hover {
     background-color: #6767672a;
   }
+  input {
+    background-color: transparent;
+    border-radius: 10px;
+    margin: 15px 0px;
+    color-scheme: dark;
+  }
 }
 /* width */
 ::-webkit-scrollbar {
