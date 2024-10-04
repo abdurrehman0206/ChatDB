@@ -143,7 +143,7 @@ app.post("/api/query", async (req, res) => {
   }
 });
 
-// Start the server
+// Start the server1
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
