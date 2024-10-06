@@ -1,12 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { FaCircleArrowUp, FaMicrophone } from "react-icons/fa6";
 
-import { FaCircleArrowUp } from "react-icons/fa6";
 const DbChat = () => {
   const [query, setQuery] = useState("");
   const [response, setResponse] = useState("");
   const [resultData, setResultData] = useState([]); // Store query results
   const [page, setPage] = useState(1); // Track the current page
   const rowsPerPage = 50; // Number of rows per page
+  const [isListening, setIsListening] = useState(false);
+  const [recognition, setRecognition] = useState(null);
+
+  useEffect(() => {
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      const recog = new SpeechRecognition();
+      recog.continuous = false; // Set to true for continuous recognition
+      recog.interimResults = false; // Set to true to get interim results
+      recog.lang = "en-US"; // Set your preferred language
+
+      recog.onstart = () => {
+        setIsListening(true);
+      };
+
+      recog.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setQuery(transcript);
+        setIsListening(false);
+      };
+
+      recog.onend = () => {
+        setIsListening(false);
+      };
+
+      setRecognition(recog);
+    }
+  }, []);
 
   const handleQueryChange = (e) => {
     setQuery(e.target.value);
@@ -65,18 +94,34 @@ const DbChat = () => {
     });
   };
 
+  const handleMicClick = () => {
+    if (recognition) {
+      if (isListening) {
+        recognition.stop();
+      } else {
+        recognition.start();
+      }
+    }
+  };
+
   return (
     <div className="container">
       <form onSubmit={handleQuerySubmit}>
         <div className="chat-bar">
           <input
-            className=""
             type="text"
             placeholder="Message ChatDB"
             value={query}
             onChange={handleQueryChange}
           />
-          <button type="submit">
+          <button
+            type="button"
+            onClick={handleMicClick}
+            className={`mic-icon ${isListening ? "active" : ""}`}
+          >
+            <FaMicrophone />
+          </button>
+          <button type="submit" className="submit-icon">
             <FaCircleArrowUp />
           </button>
         </div>

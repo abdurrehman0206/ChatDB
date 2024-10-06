@@ -206,11 +206,23 @@ button {
       height: 1.8rem;
     }
   }
+  .mic-icon {
+    margin-right: 10px;
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
+      border: none;
+    }
+  }
+  .mic-icon.active {
+    svg {
+      color: white;
+    }
+  }
 }
-.chat-bar input:not(:placeholder-shown) + button svg {
+.chat-bar input:not(:placeholder-shown) ~ button.submit-icon svg {
   color: white;
 }
-
 .data_entry_form {
   select {
     background-color: transparent;
