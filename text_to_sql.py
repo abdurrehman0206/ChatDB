@@ -13,7 +13,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_path)
 model = AutoModelForSeq2SeqLM.from_pretrained(model_path)
 
 # Database path
-db_path = 'Z:/ReactJS/ChatDB/employee_demo.db'
+db_path = 'Z:/ReactJS/ChatDB - Copy/employee_demo.db'
 
 def get_schema():
     """Fetch the schema from the SQLite database."""

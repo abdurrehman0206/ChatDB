@@ -1,4 +1,4 @@
-PYTHON_MODEL_PATH=Z:\ReactJS\ChatDB\text_to_sql.py
-NODE_SERVER_PATH=Z:\ReactJS\ChatDB\WebInterface\server.js
-REACT_APP_PATH=Z:\ReactJS\ChatDB\WebInterface
-VENV_PATH=Z:\ReactJS\ChatDB\.venv\Scripts\activate
+PYTHON_MODEL_PATH=Z:\ReactJS\ChatDB - Copy\text_to_sql.py
+NODE_SERVER_PATH=Z:\ReactJS\ChatDB - Copy\WebInterface\server.js
+REACT_APP_PATH=Z:\ReactJS\ChatDB - Copy\WebInterface
+VENV_PATH=Z:\ReactJS\ChatDB - Copy\.venv\Scripts\activate

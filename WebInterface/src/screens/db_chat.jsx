@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaCircleArrowUp, FaMicrophone } from "react-icons/fa6";
+import MapComponent from "./map_component";
 
 const DbChat = () => {
   const [query, setQuery] = useState("");
@@ -9,6 +10,8 @@ const DbChat = () => {
   const rowsPerPage = 50; // Number of rows per page
   const [isListening, setIsListening] = useState(false);
   const [recognition, setRecognition] = useState(null);
+  const [locations, setLocations] = useState([]);
+  const [mapKey, setMapKey] = useState(0);
 
   useEffect(() => {
     const SpeechRecognition =
@@ -55,33 +58,51 @@ const DbChat = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          query, // Send the query directly to the backend
-          limit: rowsPerPage, // Limit the number of rows per page
-          offset: (pageNum - 1) * rowsPerPage, // Calculate the offset
+          query,
+          limit: rowsPerPage,
+          offset: (pageNum - 1) * rowsPerPage,
         }),
       });
 
       const result = await dbRes.json();
 
       if (dbRes.ok && result.data) {
-        // Assuming result.data is an array of objects
-        setResponse(result.sql || ""); // Assuming SQL query is returned in result.sql
-        setResultData(result.data); // Store the result data
+        setResponse(result.sql || "");
+        setResultData(result.data);
+
+        const locData = result.data
+          .filter((row) => row.x !== undefined && row.y !== undefined)
+          .map((row) => ({
+            firstName: row.first_name,
+            lastName: row.last_name,
+            location: row.location,
+            x: row.x,
+            y: row.y,
+          }));
+
+        if (locData.length > 0) {
+          setLocations(locData);
+          setMapKey(mapKey + 1);
+        } else {
+          setLocations([]);
+        }
       } else {
         setResultData([]);
         setResponse("No results found.");
+        setLocations([]);
       }
     } catch (error) {
       console.error("Error:", error);
       setResponse("Failed to generate SQL.");
       setResultData([]);
+      setLocations([]);
     }
   };
 
   const handleNextPage = () => {
     setPage((prevPage) => {
       const nextPage = prevPage + 1;
-      fetchData(nextPage); // Fetch the next page of results
+      fetchData(nextPage);
       return nextPage;
     });
   };
@@ -89,7 +110,7 @@ const DbChat = () => {
   const handlePreviousPage = () => {
     setPage((prevPage) => {
       const prev = prevPage - 1 > 0 ? prevPage - 1 : 1;
-      fetchData(prev); // Fetch the previous page of results
+      fetchData(prev);
       return prev;
     });
   };
@@ -169,6 +190,13 @@ const DbChat = () => {
       )}
 
       {resultData.length === 0 && response && <p>No results to display.</p>}
+      {/* Map output section */}
+      {locations.length > 0 && (
+        <div className="map-output">
+          <h2>Location</h2>
+          <MapComponent locations={locations} mapKey={mapKey} />
+        </div>
+      )}
     </div>
   );
 };
